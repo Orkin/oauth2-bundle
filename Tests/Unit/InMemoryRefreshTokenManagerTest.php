@@ -67,7 +67,10 @@ final class InMemoryRefreshTokenManagerTest extends TestCase
             new AccessToken(
                 $identifier,
                 new DateTimeImmutable('+1 day'),
-                new Client('client', 'secret'),
+                new Client(
+                    'client',
+                    password_hash('secret', PASSWORD_DEFAULT)
+                ),
                 null,
                 []
             )

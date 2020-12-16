@@ -16,7 +16,7 @@ final class ClientRepositoryTest extends AbstractIntegrationTest
     public function testValidateClientWithPlainSecret(): void
     {
         $identifier = 'foo';
-        $secret = 'bar';
+        $secret = password_hash('bar', PASSWORD_DEFAULT);
 
         $client = new Client($identifier, $secret);
 

@@ -49,7 +49,6 @@ final class TokenEndpointTest extends AbstractAcceptanceTest
         $this->assertSame('application/json; charset=UTF-8', $response->headers->get('Content-Type'));
 
         $jsonResponse = json_decode($response->getContent(), true);
-
         $this->assertSame('Bearer', $jsonResponse['token_type']);
         $this->assertSame(3600, $jsonResponse['expires_in']);
         $this->assertNotEmpty($jsonResponse['access_token']);

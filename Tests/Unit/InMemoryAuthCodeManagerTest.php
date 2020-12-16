@@ -64,7 +64,10 @@ final class InMemoryAuthCodeManagerTest extends TestCase
         return new AuthorizationCode(
             $identifier,
             new DateTimeImmutable($modify),
-            new Client('client', 'secret'),
+            new Client(
+                'client',
+                password_hash('secret', PASSWORD_DEFAULT)
+            ),
             null,
             []
         );

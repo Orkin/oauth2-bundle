@@ -117,7 +117,7 @@ abstract class AbstractIntegrationTest extends TestCase
 
         $scopeConverter = new ScopeConverter();
         $scopeRepository = new ScopeRepository($this->scopeManager, $this->clientManager, $scopeConverter, $this->eventDispatcher);
-        $clientRepository = new ClientRepository($this->clientManager);
+        $clientRepository = new ClientRepository($this->clientManager, true);
         $accessTokenRepository = new AccessTokenRepository($this->accessTokenManager, $this->clientManager, $scopeConverter);
         $refreshTokenRepository = new RefreshTokenRepository($this->refreshTokenManager, $this->accessTokenManager);
         $userConverter = new UserConverter();
@@ -206,14 +206,20 @@ abstract class AbstractIntegrationTest extends TestCase
     protected function handleTokenRequest(ServerRequestInterface $serverRequest): array
     {
         $response = $this->psrFactory->createResponse();
-
         try {
-            $response = $this->authorizationServer->respondToAccessTokenRequest($serverRequest, $response);
+            $response = $this
+                ->authorizationServer
+                ->respondToAccessTokenRequest(
+                    $serverRequest,
+                    $response
+                );
         } catch (OAuthServerException $e) {
             $response = $e->generateHttpResponse($response);
         }
-
-        return json_decode($response->getBody()->__toString(), true);
+        return json_decode(
+            (string) $response->getBody(),
+            true
+        );
     }
 
     protected function handleResourceRequest(ServerRequestInterface $serverRequest): ?ServerRequestInterface

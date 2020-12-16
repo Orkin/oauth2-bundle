@@ -124,7 +124,6 @@ final class AuthorizationServerTest extends AbstractIntegrationTest
             'grant_type' => 'client_credentials',
             'scope' => 'fancy rock',
         ]);
-
         $response = $this->handleTokenRequest($request);
 
         // Response assertions.
@@ -138,7 +137,6 @@ final class AuthorizationServerTest extends AbstractIntegrationTest
         $request = $this->createAuthorizationRequest('foo:secret', [
             'grant_type' => 'non_existing',
         ]);
-
         $response = $this->handleTokenRequest($request);
 
         // Response assertions.
@@ -153,7 +151,6 @@ final class AuthorizationServerTest extends AbstractIntegrationTest
             'grant_type' => 'client_credentials',
             'scope' => 'non_existing',
         ]);
-
         $response = $this->handleTokenRequest($request);
 
         // Response assertions.
@@ -175,7 +172,6 @@ final class AuthorizationServerTest extends AbstractIntegrationTest
         } finally {
             timecop_return();
         }
-
         $accessToken = $this->getAccessToken($response['access_token']);
 
         // Response assertions.

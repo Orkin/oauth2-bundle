@@ -33,6 +33,7 @@
     "require-dev": {
         "ext-timecop": "*",
         "ext-xdebug": "*",
+        "ext-json": "*",
         "laminas/laminas-diactoros": "^2.2",
         "nyholm/psr7": "^1.2",
         "phpunit/phpunit": "^8.5",

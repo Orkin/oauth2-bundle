@@ -56,7 +56,10 @@ final class DeleteClientCommandTest extends AbstractAcceptanceTest
 
     private function fakeAClient(string $identifier): Client
     {
-        return new Client($identifier, 'quzbaz');
+        return new Client(
+            $identifier,
+            password_hash('quzbaz', PASSWORD_DEFAULT)
+        );
     }
 
     private function getClientManager(): ClientManagerInterface

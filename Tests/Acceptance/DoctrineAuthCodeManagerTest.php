@@ -23,7 +23,10 @@ final class DoctrineAuthCodeManagerTest extends AbstractAcceptanceTest
 
         $doctrineAuthCodeManager = new DoctrineAuthCodeManager($em);
 
-        $client = new Client('client', 'secret');
+        $client = new Client(
+            'client',
+            password_hash('secret', PASSWORD_DEFAULT)
+        );
         $em->persist($client);
 
         timecop_freeze(new DateTimeImmutable());

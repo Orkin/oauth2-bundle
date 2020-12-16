@@ -85,7 +85,10 @@ final class UpdateClientCommandTest extends AbstractAcceptanceTest
 
     private function fakeAClient($identifier): Client
     {
-        return new Client($identifier, 'quzbaz');
+        return new Client(
+            $identifier,
+            password_hash('quzbaz', PASSWORD_DEFAULT)
+        );
     }
 
     private function getClientManager(): ClientManagerInterface

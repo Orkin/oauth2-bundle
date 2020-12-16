@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Trikoder\Bundle\OAuth2Bundle\Tests\Fixtures;
 
 use DateTimeImmutable;
+use PhpParser\Node\Expr\AssignOp\ShiftLeft;
 use Trikoder\Bundle\OAuth2Bundle\Manager\AccessTokenManagerInterface;
 use Trikoder\Bundle\OAuth2Bundle\Manager\AuthorizationCodeManagerInterface;
 use Trikoder\Bundle\OAuth2Bundle\Manager\ClientManagerInterface;
@@ -64,6 +65,8 @@ final class FixtureFactory
     public const FIXTURE_USER = 'user';
     public const FIXTURE_PASSWORD = 'password';
 
+    public static $secrets = [];
+
     public static function createUser(array $roles = []): User
     {
         $user = new User();
@@ -101,10 +104,14 @@ final class FixtureFactory
     }
 
     /**
+     * @param ScopeManagerInterface $scopeManager
+     * @param ClientManagerInterface $clientManager
      * @return AccessToken[]
      */
-    private static function createAccessTokens(ScopeManagerInterface $scopeManager, ClientManagerInterface $clientManager): array
-    {
+    private static function createAccessTokens(
+        ScopeManagerInterface $scopeManager,
+        ClientManagerInterface $clientManager
+    ): array {
         $accessTokens = [];
 
         $accessTokens[] = (new AccessToken(
@@ -257,27 +264,67 @@ final class FixtureFactory
     {
         $clients = [];
 
-        $clients[] = (new Client(self::FIXTURE_CLIENT_FIRST, 'secret'))
-            ->setRedirectUris(new RedirectUri(self::FIXTURE_CLIENT_FIRST_REDIRECT_URI));
+        self::$secrets[self::FIXTURE_CLIENT_FIRST] =
+            password_hash('secret', PASSWORD_DEFAULT);
+        $clients[] = (
+            new Client(
+                self::FIXTURE_CLIENT_FIRST,
+                self::$secrets[self::FIXTURE_CLIENT_FIRST]
+            )
+        )->setRedirectUris(
+            new RedirectUri(self::FIXTURE_CLIENT_FIRST_REDIRECT_URI)
+        );
 
-        $clients[] = (new Client(self::FIXTURE_CLIENT_SECOND, 'top_secret'))
-            ->setRedirectUris(new RedirectUri(self::FIXTURE_CLIENT_SECOND_REDIRECT_URI));
+        self::$secrets[self::FIXTURE_CLIENT_SECOND] =
+            password_hash('top_secret', PASSWORD_DEFAULT);
+        $clients[] = (new Client(
+            self::FIXTURE_CLIENT_SECOND,
+            self::$secrets[self::FIXTURE_CLIENT_SECOND]
+        ))
+        ->setRedirectUris(
+            new RedirectUri(self::FIXTURE_CLIENT_SECOND_REDIRECT_URI)
+        );
 
-        $clients[] = (new Client(self::FIXTURE_CLIENT_INACTIVE, 'woah'))
+        self::$secrets[self::FIXTURE_CLIENT_INACTIVE] =
+            password_hash('woah', PASSWORD_DEFAULT);
+        $clients[] = (
+            new Client(
+                self::FIXTURE_CLIENT_INACTIVE,
+                self::$secrets[self::FIXTURE_CLIENT_INACTIVE]
+            ))
             ->setActive(false);
 
-        $clients[] = (new Client(self::FIXTURE_CLIENT_RESTRICTED_GRANTS, 'wicked'))
+        self::$secrets[self::FIXTURE_CLIENT_RESTRICTED_GRANTS] =
+            password_hash('wicked', PASSWORD_DEFAULT);
+        $clients[] = (
+            new Client(
+                self::FIXTURE_CLIENT_RESTRICTED_GRANTS,
+                self::$secrets[self::FIXTURE_CLIENT_RESTRICTED_GRANTS]
+            ))
             ->setGrants(new Grant('password'));
 
-        $clients[] = (new Client(self::FIXTURE_CLIENT_RESTRICTED_SCOPES, 'beer'))
+        self::$secrets[self::FIXTURE_CLIENT_RESTRICTED_SCOPES] =
+            password_hash('beer', PASSWORD_DEFAULT);
+        $clients[] = (
+            new Client(
+                self::FIXTURE_CLIENT_RESTRICTED_SCOPES,
+                self::$secrets[self::FIXTURE_CLIENT_RESTRICTED_SCOPES]
+            ))
             ->setScopes(new Scope(self::FIXTURE_SCOPE_SECOND));
 
-        $clients[] = (new Client(self::FIXTURE_PUBLIC_CLIENT, null))
-            ->setRedirectUris(new RedirectUri(self::FIXTURE_PUBLIC_CLIENT_REDIRECT_URI));
+        $clients[] = (
+            new Client(self::FIXTURE_PUBLIC_CLIENT, null)
+        )
+        ->setRedirectUris(new RedirectUri(self::FIXTURE_PUBLIC_CLIENT_REDIRECT_URI));
 
-        $clients[] = (new Client(self::FIXTURE_PUBLIC_CLIENT_ALLOWED_TO_USE_PLAIN_CHALLENGE_METHOD, null))
-            ->setAllowPlainTextPkce(true)
-            ->setRedirectUris(new RedirectUri(self::FIXTURE_PUBLIC_CLIENT_ALLOWED_TO_USE_PLAIN_CHALLENGE_METHOD_REDIRECT_URI));
+        $clients[] = (new Client(
+            self::FIXTURE_PUBLIC_CLIENT_ALLOWED_TO_USE_PLAIN_CHALLENGE_METHOD,
+            null
+        ))
+        ->setAllowPlainTextPkce(true)
+        ->setRedirectUris(
+            new RedirectUri(self::FIXTURE_PUBLIC_CLIENT_ALLOWED_TO_USE_PLAIN_CHALLENGE_METHOD_REDIRECT_URI)
+        );
 
         return $clients;
     }

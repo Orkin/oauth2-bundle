@@ -24,7 +24,10 @@ final class DoctrineRefreshTokenManagerTest extends AbstractAcceptanceTest
 
         $doctrineRefreshTokenManager = new DoctrineRefreshTokenManager($em);
 
-        $client = new Client('client', 'secret');
+        $client = new Client(
+            'client',
+            password_hash('secret', PASSWORD_DEFAULT)
+        );
         $em->persist($client);
         $em->flush();
 
