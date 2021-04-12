@@ -8,6 +8,7 @@ use Carbon\CarbonImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Trikoder\Bundle\OAuth2Bundle\Manager\AccessTokenManagerInterface;
 use Trikoder\Bundle\OAuth2Bundle\Model\AccessToken;
+use Trikoder\Bundle\OAuth2Bundle\Model\AccessTokenInterface;
 
 final class AccessTokenManager implements AccessTokenManagerInterface
 {
@@ -28,7 +29,7 @@ final class AccessTokenManager implements AccessTokenManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function find(string $identifier): ?AccessToken
+    public function find(string $identifier): ?AccessTokenInterface
     {
         if ($this->disableAccessTokenSaving) {
             return null;
@@ -40,7 +41,7 @@ final class AccessTokenManager implements AccessTokenManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function save(AccessToken $accessToken): void
+    public function save(AccessTokenInterface $accessToken): void
     {
         if ($this->disableAccessTokenSaving) {
             return;
